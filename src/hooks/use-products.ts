@@ -2,10 +2,10 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { productService } from '@/lib/api';
 import { CreateProductCommand, UpdateProductCommand } from '@/types/product';
 
-export const useProducts = () => {
+export const useProducts = (params?: Record<string, string | number>) => {
     return useQuery({
-        queryKey: ['products'],
-        queryFn: productService.getAllProducts,
+        queryKey: ['products', params],
+        queryFn: () => productService.getAllProducts(params),
     });
 };
 

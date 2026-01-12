@@ -43,8 +43,12 @@ async function request<T>(
 }
 
 export const apiClient = {
-    get: <T>(url: string, options?: RequestInit) =>
-        request<T>(url, { ...options, method: 'GET' }),
+    get: <T>(url: string, params?: Record<string, string | number>, options?: RequestInit) => {
+        const query = params
+            ? '?' + new URLSearchParams(params as Record<string, string>).toString()
+            : '';
+        return request<T>(`${url}${query}`, { ...options, method: 'GET' });
+    },
 
     post: <T>(url: string, body?: unknown, options?: RequestInit) =>
         request<T>(url, {

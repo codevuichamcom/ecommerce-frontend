@@ -4,8 +4,8 @@ import { Product, CreateProductCommand, UpdateProductCommand } from '@/types/pro
 const BASE_URL = process.env.NEXT_PUBLIC_PRODUCT_SERVICE_URL;
 
 export const productService = {
-    getAllProducts: () =>
-        apiClient.get<Product[]>(`${BASE_URL}/api/products`),
+    getAllProducts: (params?: Record<string, string | number>) =>
+        apiClient.get<Product[]>(`${BASE_URL}/api/products`, params),
 
     getProduct: (id: string) =>
         apiClient.get<Product>(`${BASE_URL}/api/products/${id}`),
