@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { ShoppingCart, User, Search, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { CartDrawer } from '@/components/features/cart';
 
 export function Header() {
   return (
@@ -25,19 +26,13 @@ export function Header() {
 
         <div className="flex items-center gap-2 md:gap-4">
           <div className="hidden md:flex relative w-full max-w-sm items-center space-x-2">
-             {/* Search Bar Placeholder */}
              <Button variant="ghost" size="icon" className="h-9 w-9">
                 <Search className="h-4 w-4" />
                 <span className="sr-only">Search</span>
              </Button>
           </div>
           
-          <Link href="/cart">
-            <Button variant="ghost" size="icon" className="h-9 w-9">
-                <ShoppingCart className="h-4 w-4" />
-                <span className="sr-only">Cart</span>
-            </Button>
-          </Link>
+          <CartDrawer />
 
           <Link href="/account">
             <Button variant="ghost" size="icon" className="h-9 w-9">
