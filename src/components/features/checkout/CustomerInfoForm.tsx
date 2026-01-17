@@ -59,13 +59,15 @@ export function CustomerInfoForm({ onSubmit, isLoading, isDisabled }: CustomerIn
                         )}
                     </div>
 
-                    <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-4">
-                        <p className="text-sm text-amber-600 dark:text-amber-400">
-                            <strong>Demo Mode:</strong> In a real application, you would be logged in 
-                            and your customer ID would be automatically retrieved. For this demo, 
-                            please enter any valid ID.
-                        </p>
-                    </div>
+                    {process.env.NEXT_PUBLIC_DEMO_MODE === 'true' && (
+                        <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-4">
+                            <p className="text-sm text-amber-600 dark:text-amber-400">
+                                <strong>Demo Mode:</strong> In a real application, you would be logged in 
+                                and your customer ID would be automatically retrieved. For this demo, 
+                                please enter any valid ID.
+                            </p>
+                        </div>
+                    )}
                 </div>
             </div>
 

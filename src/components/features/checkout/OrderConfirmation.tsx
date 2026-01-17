@@ -59,9 +59,10 @@ function getStatusConfig(status: OrderStatus) {
                 className: "",
             }
         default:
+            const label = (status as string).replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, (l) => l.toUpperCase());
             return {
                 variant: "secondary" as const,
-                label: status,
+                label,
                 icon: Clock,
                 className: "",
             }

@@ -1,9 +1,9 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useMemo } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { ChevronLeft, AlertCircle } from "lucide-react"
+import { ChevronLeft, AlertCircle, ShoppingBag } from "lucide-react"
 
 import { useCartStore } from "@/stores/cart-store"
 import { useCreateOrder } from "@/hooks/use-orders"
@@ -12,6 +12,9 @@ import { CreateOrderCommand } from "@/types/order"
 import { CheckoutLayout, CheckoutSummary, CustomerInfoForm, type CheckoutFormData } from "@/components/features/checkout"
 import { Button } from "@/components/ui/button"
 
+// Constants for magic numbers (Issue #10)
+const HYDRATION_DELAY_MS = 100;
+
 export default function CheckoutPage() {
     const router = useRouter()
     const { items, totalItems, clearCart } = useCartStore()
@@ -19,20 +22,27 @@ export default function CheckoutPage() {
     const [error, setError] = useState<string | null>(null)
     const [isHydrated, setIsHydrated] = useState(false)
     
-    // Fix: Persist idempotency key across retries
+    // Fix (Issue #1): Generate key based on cart content hash to avoid unnecessary regenerations
+    const cartHash = useMemo(() => 
+        JSON.stringify(items.map(i => ({ id: i.productId, qty: i.quantity }))),
+        [items]
+    )
+    
     const [idempotencyKey, setIdempotencyKey] = useState(() => generateIdempotencyKey())
 
     // Handle hydration for Zustand persisted store
     useEffect(() => {
-        setIsHydrated(true)
+        // Simple delay to ensure hydration is complete and items are loaded
+        const timer = setTimeout(() => setIsHydrated(true), HYDRATION_DELAY_MS);
+        return () => clearTimeout(timer);
     }, [])
 
-    // Refresh idempotency key if cart items change
+    // Refresh idempotency key ONLY when cart content actually changes
     useEffect(() => {
         if (items.length > 0) {
             setIdempotencyKey(generateIdempotencyKey())
         }
-    }, [items])
+    }, [cartHash])
 
     // Redirect to cart if empty (after hydration)
     useEffect(() => {
