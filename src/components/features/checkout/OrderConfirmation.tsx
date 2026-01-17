@@ -59,6 +59,9 @@ function getStatusConfig(status: OrderStatus) {
                 className: "",
             }
         default:
+            if (process.env.NODE_ENV === 'development') {
+                console.warn(`[OrderConfirmation] Unknown order status: ${status}`)
+            }
             const label = (status as string).replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, (l) => l.toUpperCase());
             return {
                 variant: "secondary" as const,

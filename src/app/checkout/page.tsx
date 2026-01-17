@@ -28,7 +28,11 @@ export default function CheckoutPage() {
         [items]
     )
     
-    const [idempotencyKey, setIdempotencyKey] = useState(() => generateIdempotencyKey())
+    // Simplified idempotency key generation (Round 3 Fix)
+    const idempotencyKey = useMemo(() => {
+        if (items.length === 0) return ''
+        return generateIdempotencyKey()
+    }, [cartHash])
 
     // Handle hydration for Zustand persisted store
     useEffect(() => {
@@ -36,13 +40,6 @@ export default function CheckoutPage() {
         const timer = setTimeout(() => setIsHydrated(true), HYDRATION_DELAY_MS);
         return () => clearTimeout(timer);
     }, [])
-
-    // Refresh idempotency key ONLY when cart content actually changes
-    useEffect(() => {
-        if (items.length > 0) {
-            setIdempotencyKey(generateIdempotencyKey())
-        }
-    }, [cartHash])
 
     // Redirect to cart if empty (after hydration)
     useEffect(() => {

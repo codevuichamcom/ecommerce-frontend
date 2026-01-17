@@ -39,7 +39,14 @@ function CheckoutSuccessContent() {
 
     // Error state handling (Issue #8)
     if (error || !order) {
-        const isNetworkError = error instanceof Error && (error.message.includes('fetch') || error.message.includes('network'));
+        const isNetworkError = error instanceof Error && (
+            error.message.toLowerCase().includes('fetch') ||
+            error.message.toLowerCase().includes('network') ||
+            error.message.toLowerCase().includes('timeout') ||
+            error.message.toLowerCase().includes('cors') ||
+            error.name === 'TypeError' ||  // fetch failures
+            error.name === 'AbortError'    // request aborted
+        );
         
         return (
             <div className="container mx-auto px-4 py-32 flex flex-col items-center justify-center text-center">

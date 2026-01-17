@@ -231,4 +231,5 @@ Acceptable for merge với minor fixes.
 ## References
 
 - [Round 1 Review](./PHASE4_CODE_REVIEW.md)
+- [Round 3 Review (Final)](./PHASE4_CODE_REVIEW_ROUND3.md)
 - [Frontend Master Plan](./MASTER_PLAN.md)

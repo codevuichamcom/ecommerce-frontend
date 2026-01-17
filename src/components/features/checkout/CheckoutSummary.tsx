@@ -72,7 +72,7 @@ export function CheckoutSummary({ className }: CheckoutSummaryProps) {
                     </div>
                     <div className="flex justify-between text-sm">
                         <span className="text-muted-foreground">Shipping</span>
-                        <span className="text-green-600 font-medium font-medium">Free</span>
+                        <span className="text-green-600 font-medium">Free</span>
                     </div>
                     <div className="flex justify-between text-sm">
                         <span className="text-muted-foreground">Estimated Tax</span>
