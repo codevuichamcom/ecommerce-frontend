@@ -317,9 +317,10 @@ cancelOrder: (id: string, reason?: string) =>
 
 ## Action Items (Theo priority)
 
-- [ ] Fix idempotency key logic NGAY
-- [ ] Fix index as key issue
-- [ ] Dùng enum thay vì string literal cho OrderStatus
+- [x] Fix idempotency key logic NGAY *(Fixed in Round 2)*
+- [x] Fix index as key issue *(Fixed in Round 2)*
+- [x] Dùng enum thay vì string literal cho OrderStatus *(Fixed in Round 2)*
+- [x] Add validation check trước khi submit *(Fixed in Round 2)*
 - [ ] Extract duplicate skeleton component
 - [ ] Add empty state handling cho CheckoutSummary
 - [ ] Add request timeout
@@ -332,3 +333,9 @@ cancelOrder: (id: string, reason?: string) =>
 ## Reviewer Notes
 
 Code structure và patterns nhìn chung tốt, nhưng idempotency bug là **critical** và cần fix trước khi deploy. Đây là lỗi logic business quan trọng, không phải lỗi UI.
+
+---
+
+## Follow-up
+
+- **Round 2 Review:** [PHASE4_CODE_REVIEW_ROUND2.md](./PHASE4_CODE_REVIEW_ROUND2.md) - Review lại sau khi fix các critical issues
