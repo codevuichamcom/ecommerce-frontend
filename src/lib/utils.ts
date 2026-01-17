@@ -11,3 +11,11 @@ export function formatCurrency(amount: number, currency = 'USD') {
     currency: currency,
   }).format(amount);
 }
+
+/**
+ * Generate a unique idempotency key for API requests.
+ * Used to prevent duplicate order creation on retries.
+ */
+export function generateIdempotencyKey(): string {
+  return `${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
+}
