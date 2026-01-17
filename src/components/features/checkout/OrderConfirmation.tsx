@@ -105,9 +105,9 @@ export function OrderConfirmation({ order }: OrderConfirmationProps) {
                 <div className="space-y-4 mb-6">
                     <h3 className="font-semibold">Order Items ({order.totalItems})</h3>
                     <div className="space-y-3">
-                        {order.items.map((item, index) => (
+                        {order.items.map((item) => (
                             <div 
-                                key={index} 
+                                key={item.productId} 
                                 className="flex justify-between items-center py-3 border-b last:border-0"
                             >
                                 <div className="flex items-center gap-3">

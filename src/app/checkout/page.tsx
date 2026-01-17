@@ -18,11 +18,21 @@ export default function CheckoutPage() {
     const createOrderMutation = useCreateOrder()
     const [error, setError] = useState<string | null>(null)
     const [isHydrated, setIsHydrated] = useState(false)
+    
+    // Fix: Persist idempotency key across retries
+    const [idempotencyKey, setIdempotencyKey] = useState(() => generateIdempotencyKey())
 
     // Handle hydration for Zustand persisted store
     useEffect(() => {
         setIsHydrated(true)
     }, [])
+
+    // Refresh idempotency key if cart items change
+    useEffect(() => {
+        if (items.length > 0) {
+            setIdempotencyKey(generateIdempotencyKey())
+        }
+    }, [items])
 
     // Redirect to cart if empty (after hydration)
     useEffect(() => {
@@ -32,24 +42,30 @@ export default function CheckoutPage() {
     }, [isHydrated, totalItems, router])
 
     const handleSubmit = async (data: CheckoutFormData) => {
+        // Validation: Ensure cart is not empty
+        if (items.length === 0) {
+            setError("Your cart is empty. Please add items before checking out.")
+            return
+        }
+
         setError(null)
 
-        // Transform cart items to CreateOrderCommand format
+        // Fix: Snapshot items to avoid race conditions during submission
+        const itemSnapshot = [...items]
+
+        // Transform captured items to CreateOrderCommand format
         const command: CreateOrderCommand = {
             customerId: data.customerId,
-            items: items.map((item) => ({
+            items: itemSnapshot.map((item) => ({
                 productId: item.productId,
                 quantity: item.quantity,
             })),
         }
 
-        // Generate idempotency key for this submission
-        const idempotencyKey = generateIdempotencyKey()
-
         try {
             const order = await createOrderMutation.mutateAsync({
                 command,
-                idempotencyKey,
+                idempotencyKey, // Now stable across retries for the same order attempt
             })
 
             // Clear cart on success
