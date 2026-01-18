@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { orderService } from '@/lib/api';
-import { CreateOrderCommand } from '@/types/order';
+import { CreateOrderCommand, OrderStatus } from '@/types/order';
 
 export const useOrders = (customerId: string) => {
     return useQuery({
@@ -10,6 +10,9 @@ export const useOrders = (customerId: string) => {
     });
 };
 
+// Constants for refetch intervals (Issue #10)
+const TRANSITIONAL_STATUS_REFETCH_INTERVAL_MS = 2000;
+
 export const useOrder = (id: string) => {
     return useQuery({
         queryKey: ['orders', id],
@@ -18,7 +21,9 @@ export const useOrder = (id: string) => {
         refetchInterval: (query) => {
             // Refetch if order is in a transitional state
             const status = query.state.data?.status;
-            return status === 'PENDING' || status === 'INVENTORY_RESERVED' ? 2000 : false;
+            return status === OrderStatus.PENDING || status === OrderStatus.INVENTORY_RESERVED
+                ? TRANSITIONAL_STATUS_REFETCH_INTERVAL_MS
+                : false;
         },
     });
 };

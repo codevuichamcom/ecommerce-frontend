@@ -12,34 +12,52 @@ class ApiError extends Error {
     }
 }
 
+const DEFAULT_TIMEOUT_MS = 15000;
+
 async function request<T>(
     url: string,
-    options: RequestInit = {}
+    options: RequestInit & { timeout?: number } = {}
 ): Promise<T> {
-    const response = await fetch(url, {
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options.headers,
-        },
-    });
+    const { timeout = DEFAULT_TIMEOUT_MS, ...fetchOptions } = options;
 
-    if (response.status === 204) {
-        return {} as T;
+    const controller = new AbortController();
+    const id = setTimeout(() => controller.abort(), timeout);
+
+    try {
+        const response = await fetch(url, {
+            ...fetchOptions,
+            headers: {
+                'Content-Type': 'application/json',
+                ...fetchOptions.headers,
+            },
+            signal: controller.signal,
+        });
+
+        clearTimeout(id);
+
+        if (response.status === 204) {
+            return {} as T;
+        }
+
+        const result: ApiResponse<T> = await response.json();
+
+        if (!response.ok || !result.success) {
+            throw new ApiError(
+                result.error?.code || 'UNKNOWN_ERROR',
+                result.error?.message || 'An unexpected error occurred',
+                response.status,
+                result.error?.details
+            );
+        }
+
+        return result.data;
+    } catch (error) {
+        clearTimeout(id);
+        if (error instanceof Error && error.name === 'AbortError') {
+            throw new ApiError('TIMEOUT', `Request timed out after ${timeout}ms`, 408);
+        }
+        throw error;
     }
-
-    const result: ApiResponse<T> = await response.json();
-
-    if (!response.ok || !result.success) {
-        throw new ApiError(
-            result.error?.code || 'UNKNOWN_ERROR',
-            result.error?.message || 'An unexpected error occurred',
-            response.status,
-            result.error?.details
-        );
-    }
-
-    return result.data;
 }
 
 export const apiClient = {

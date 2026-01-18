@@ -1,0 +1,151 @@
+"use client"
+
+import { useEffect, useState, useMemo } from "react"
+import { useRouter } from "next/navigation"
+import Link from "next/link"
+import { ChevronLeft, AlertCircle, ShoppingBag } from "lucide-react"
+
+import { useCartStore } from "@/stores/cart-store"
+import { useCreateOrder } from "@/hooks/use-orders"
+import { generateIdempotencyKey } from "@/lib/utils"
+import { CreateOrderCommand } from "@/types/order"
+import { CheckoutLayout, CheckoutSummary, CustomerInfoForm, type CheckoutFormData } from "@/components/features/checkout"
+import { Button } from "@/components/ui/button"
+
+// Constants for magic numbers (Issue #10)
+const HYDRATION_DELAY_MS = 100;
+
+export default function CheckoutPage() {
+    const router = useRouter()
+    const { items, totalItems, clearCart } = useCartStore()
+    const createOrderMutation = useCreateOrder()
+    const [error, setError] = useState<string | null>(null)
+    const [isHydrated, setIsHydrated] = useState(false)
+    
+    // Fix (Issue #1): Generate key based on cart content hash to avoid unnecessary regenerations
+    const cartHash = useMemo(() => 
+        JSON.stringify(items.map(i => ({ id: i.productId, qty: i.quantity }))),
+        [items]
+    )
+    
+    // Simplified idempotency key generation (Round 3 Fix)
+    const idempotencyKey = useMemo(() => {
+        if (items.length === 0) return ''
+        return generateIdempotencyKey()
+    }, [cartHash])
+
+    // Handle hydration for Zustand persisted store
+    useEffect(() => {
+        // Simple delay to ensure hydration is complete and items are loaded
+        const timer = setTimeout(() => setIsHydrated(true), HYDRATION_DELAY_MS);
+        return () => clearTimeout(timer);
+    }, [])
+
+    // Redirect to cart if empty (after hydration)
+    useEffect(() => {
+        if (isHydrated && totalItems === 0) {
+            router.push("/cart")
+        }
+    }, [isHydrated, totalItems, router])
+
+    const handleSubmit = async (data: CheckoutFormData) => {
+        // Validation: Ensure cart is not empty
+        if (items.length === 0) {
+            setError("Your cart is empty. Please add items before checking out.")
+            return
+        }
+
+        setError(null)
+
+        // Fix: Snapshot items to avoid race conditions during submission
+        const itemSnapshot = [...items]
+
+        // Transform captured items to CreateOrderCommand format
+        const command: CreateOrderCommand = {
+            customerId: data.customerId,
+            items: itemSnapshot.map((item) => ({
+                productId: item.productId,
+                quantity: item.quantity,
+            })),
+        }
+
+        try {
+            const order = await createOrderMutation.mutateAsync({
+                command,
+                idempotencyKey, // Now stable across retries for the same order attempt
+            })
+
+            // Clear cart on success
+            clearCart()
+
+            // Redirect to success page
+            router.push(`/checkout/success?orderId=${order.id}`)
+        } catch (err) {
+            console.error("Order creation failed:", err)
+            setError(
+                err instanceof Error 
+                    ? err.message 
+                    : "Failed to create order. Please try again."
+            )
+        }
+    }
+
+    // Show loading during hydration
+    if (!isHydrated) {
+        return (
+            <div className="container mx-auto px-4 py-32 flex items-center justify-center">
+                <div className="animate-pulse text-muted-foreground">
+                    Loading checkout...
+                </div>
+            </div>
+        )
+    }
+
+    // This will redirect, but show empty state briefly
+    if (totalItems === 0) {
+        return null
+    }
+
+    return (
+        <>
+            <div className="container mx-auto px-4 pt-8">
+                <Link 
+                    href="/cart" 
+                    className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+                >
+                    <ChevronLeft className="w-4 h-4 mr-1" />
+                    Back to Cart
+                </Link>
+            </div>
+
+            <CheckoutLayout
+                summary={<CheckoutSummary />}
+            >
+                {/* Error Display */}
+                {error && (
+                    <div className="mb-6 p-4 bg-destructive/10 border border-destructive/20 rounded-lg flex items-start gap-3">
+                        <AlertCircle className="w-5 h-5 text-destructive flex-shrink-0 mt-0.5" />
+                        <div>
+                            <p className="font-medium text-destructive">Order Failed</p>
+                            <p className="text-sm text-destructive/80">{error}</p>
+                        </div>
+                        <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            onClick={() => setError(null)}
+                            className="ml-auto text-destructive hover:text-destructive"
+                        >
+                            Dismiss
+                        </Button>
+                    </div>
+                )}
+
+                <CustomerInfoForm
+                    onSubmit={handleSubmit}
+                    isLoading={createOrderMutation.isPending}
+                    isDisabled={totalItems === 0}
+                />
+            </CheckoutLayout>
+        </>
+    )
+}
