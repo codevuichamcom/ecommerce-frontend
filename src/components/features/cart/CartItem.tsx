@@ -1,6 +1,6 @@
 "use client"
 
-import Image from "next/image"
+
 import { CartItem as CartItemType } from "@/types/cart"
 import { useCartStore } from "@/stores/cart-store"
 import { formatCurrency } from "@/lib/utils"

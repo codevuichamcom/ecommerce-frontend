@@ -1,7 +1,7 @@
 "use client"
 
 import { useInventory } from "@/hooks/use-inventory"
-import { Badge } from "@/components/ui/badge"
+
 import { Skeleton } from "@/components/ui/skeleton"
 import { CheckCircle2, XCircle, AlertTriangle } from "lucide-react"
 

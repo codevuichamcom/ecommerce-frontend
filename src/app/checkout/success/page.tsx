@@ -1,6 +1,6 @@
 "use client"
 
-import { Suspense } from "react"
+import React, { Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { useOrder } from "@/hooks/use-orders"
@@ -23,7 +23,7 @@ function CheckoutSuccessContent() {
                 </div>
                 <h1 className="text-2xl font-bold mb-4">No Order Found</h1>
                 <p className="text-muted-foreground mb-8 max-w-md">
-                    It looks like you haven't placed an order yet. Browse our products and find something you love!
+                    It looks like you haven&apos;t placed an order yet. Browse our products and find something you love!
                 </p>
                 <Link href="/products">
                     <Button size="lg">Browse Products</Button>

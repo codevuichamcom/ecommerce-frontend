@@ -1,5 +1,6 @@
+import React from 'react';
 import Link from 'next/link';
-import { ShoppingCart, User, Search, Menu } from 'lucide-react';
+import { User, Search, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { CartDrawer } from '@/components/features/cart';
 
@@ -14,6 +15,9 @@ export function Header() {
           <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
             <Link href="/products" className="transition-colors hover:text-foreground/80 text-foreground/60">
               New Arrivals
+            </Link>
+            <Link href="/orders" className="transition-colors hover:text-foreground/80 text-foreground/60">
+              Orders
             </Link>
             <Link href="/products?category=clothing" className="transition-colors hover:text-foreground/80 text-foreground/60">
               Clothing

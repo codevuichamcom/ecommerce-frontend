@@ -1,12 +1,12 @@
 "use client"
 
-import Image from "next/image"
+
 
 interface ProductImageProps {
     name: string
 }
 
-export function ProductImage({ name }: ProductImageProps) {
+export function ProductImage({ }: ProductImageProps) {
     return (
         <div className="relative aspect-square w-full bg-muted rounded-xl overflow-hidden flex items-center justify-center border group">
             {/* Generic product placeholder */}

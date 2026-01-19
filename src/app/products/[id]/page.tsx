@@ -4,7 +4,7 @@ import { useParams } from "next/navigation"
 import { useProduct } from "@/hooks/use-products"
 import { ProductDetail } from "@/components/features/products"
 import { Button } from "@/components/ui/button"
-import { Skeleton } from "@/components/ui/skeleton"
+
 import { AlertCircle, ChevronLeft, RefreshCcw } from "lucide-react"
 import Link from "next/link"
 

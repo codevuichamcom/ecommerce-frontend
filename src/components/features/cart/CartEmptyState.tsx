@@ -13,7 +13,7 @@ export function CartEmptyState() {
             </div>
             <h3 className="text-xl font-semibold mb-2">Your cart is empty</h3>
             <p className="text-muted-foreground mb-8 max-w-[250px]">
-                Looks like you haven't added anything to your cart yet.
+                Looks like you haven&apos;t added anything to your cart yet.
             </p>
             <SheetClose asChild>
                 <Link href="/products">

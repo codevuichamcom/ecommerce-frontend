@@ -3,7 +3,7 @@
 import { useEffect, useState, useMemo } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { ChevronLeft, AlertCircle, ShoppingBag } from "lucide-react"
+import { ChevronLeft, AlertCircle } from "lucide-react"
 
 import { useCartStore } from "@/stores/cart-store"
 import { useCreateOrder } from "@/hooks/use-orders"
@@ -32,7 +32,8 @@ export default function CheckoutPage() {
     const idempotencyKey = useMemo(() => {
         if (items.length === 0) return ''
         return generateIdempotencyKey()
-    }, [cartHash])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [cartHash, items.length])
 
     // Handle hydration for Zustand persisted store
     useEffect(() => {

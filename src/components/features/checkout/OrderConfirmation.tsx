@@ -85,7 +85,7 @@ export function OrderConfirmation({ order }: OrderConfirmationProps) {
                 </div>
                 <h1 className="text-3xl font-bold mb-2">Order Confirmed!</h1>
                 <p className="text-muted-foreground text-lg">
-                    Thank you for your order. We'll send you a confirmation email shortly.
+                    Thank you for your order. We&apos;ll send you a confirmation email shortly.
                 </p>
             </div>
 
