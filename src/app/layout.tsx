@@ -20,8 +20,40 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "LuxeMarket - Premium E-commerce Experience",
-  description: "Shop the finest products with our modern e-commerce platform.",
+  title: {
+    default: "LuxeMarket - Premium E-commerce Experience",
+    template: "%s | LuxeMarket"
+  },
+  description: "Shop the finest products with our modern e-commerce platform. High quality, fast shipping, and secure payments.",
+  keywords: ["e-commerce", "shopping", "premium products", "online store", "LuxeMarket"],
+  authors: [{ name: "LuxeMarket Team" }],
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://luxemarket.example.com",
+    title: "LuxeMarket - Premium E-commerce Experience",
+    description: "Shop the finest products with our modern e-commerce platform.",
+    siteName: "LuxeMarket",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "LuxeMarket",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "LuxeMarket - Premium E-commerce Experience",
+    description: "Shop the finest products with our modern e-commerce platform.",
+    images: ["/og-image.png"],
+    creator: "@luxemarket",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({
