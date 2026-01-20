@@ -11,6 +11,7 @@ import { generateIdempotencyKey } from "@/lib/utils"
 import { CreateOrderCommand } from "@/types/order"
 import { CheckoutLayout, CheckoutSummary, CustomerInfoForm, type CheckoutFormData } from "@/components/features/checkout"
 import { Button } from "@/components/ui/button"
+import { useToast } from "@/hooks/use-toast"
 
 // Constants for magic numbers (Issue #10)
 const HYDRATION_DELAY_MS = 100;
@@ -19,6 +20,7 @@ export default function CheckoutPage() {
     const router = useRouter()
     const { items, totalItems, clearCart } = useCartStore()
     const createOrderMutation = useCreateOrder()
+    const { toast } = useToast()
     const [error, setError] = useState<string | null>(null)
     const [isHydrated, setIsHydrated] = useState(false)
     
@@ -52,7 +54,11 @@ export default function CheckoutPage() {
     const handleSubmit = async (data: CheckoutFormData) => {
         // Validation: Ensure cart is not empty
         if (items.length === 0) {
-            setError("Your cart is empty. Please add items before checking out.")
+            toast({
+                title: "Empty Cart",
+                description: "Your cart is empty. Please add items before checking out.",
+                variant: "destructive",
+            })
             return
         }
 
@@ -79,15 +85,26 @@ export default function CheckoutPage() {
             // Clear cart on success
             clearCart()
 
+            // Success toast
+            toast({
+                title: "Order Placed Successfully",
+                description: `Order ID: ${order.id}`,
+            })
+
             // Redirect to success page
             router.push(`/checkout/success?orderId=${order.id}`)
         } catch (err) {
             console.error("Order creation failed:", err)
-            setError(
-                err instanceof Error 
-                    ? err.message 
-                    : "Failed to create order. Please try again."
-            )
+            const message = err instanceof Error 
+                ? err.message 
+                : "Failed to create order. Please try again."
+            
+            setError(message)
+            toast({
+                title: "Order Failed",
+                description: message,
+                variant: "destructive",
+            })
         }
     }
 
