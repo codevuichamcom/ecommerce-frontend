@@ -40,8 +40,10 @@ export function QuantitySelector({
                 <Minus className="h-4 w-4" />
                 <span className="sr-only">Decrease quantity</span>
             </Button>
-            <div className="h-10 w-12 flex items-center justify-center border-y bg-background font-medium text-sm">
-                {quantity}
+            <div className="h-10 w-12 flex items-center justify-center border-y bg-background font-medium text-sm overflow-hidden">
+                <span key={quantity} className="animate-in slide-in-from-bottom-2 fade-in duration-200">
+                    {quantity}
+                </span>
             </div>
             <Button
                 variant="outline"
