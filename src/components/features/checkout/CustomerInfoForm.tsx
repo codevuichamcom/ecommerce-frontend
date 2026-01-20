@@ -26,7 +26,12 @@ export function CustomerInfoForm({ onSubmit, isLoading, isDisabled }: CustomerIn
     })
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <form 
+            onSubmit={handleSubmit(onSubmit)} 
+            className="space-y-6"
+            aria-label="Customer Information Form"
+            role="form"
+        >
             <div className="bg-muted/30 rounded-2xl p-6 border">
                 <div className="flex items-center gap-3 mb-6">
                     <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
