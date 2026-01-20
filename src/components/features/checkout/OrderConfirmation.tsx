@@ -83,7 +83,9 @@ export function OrderConfirmation({ order }: OrderConfirmationProps) {
                 <div className="w-20 h-20 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-6">
                     <CheckCircle2 className="w-10 h-10 text-green-600" />
                 </div>
-                <h1 className="text-3xl font-bold mb-2">Order Confirmed!</h1>
+                <h1 className="text-3xl font-bold mb-2 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+                    Order Confirmed!
+                </h1>
                 <p className="text-muted-foreground text-lg">
                     Thank you for your order. We&apos;ll send you a confirmation email shortly.
                 </p>
