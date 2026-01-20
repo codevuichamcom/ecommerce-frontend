@@ -8,6 +8,7 @@ import { z } from 'zod';
 export const checkoutFormSchema = z.object({
     customerId: z
         .string()
+        .trim()
         .min(1, 'Customer ID is required')
         .max(100, 'Customer ID is too long')
         .regex(/^[a-zA-Z0-9_-]+$/, 'Customer ID can only contain letters, numbers, underscores, and hyphens'),
