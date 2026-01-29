@@ -1,7 +1,7 @@
 import { apiClient } from './client';
 import { Product, CreateProductCommand, UpdateProductCommand } from '@/types/product';
 
-const BASE_URL = process.env.NEXT_PUBLIC_PRODUCT_SERVICE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_API_GATEWAY_URL;
 
 export const productService = {
     getAllProducts: (params?: Record<string, string | number>) =>

@@ -1,7 +1,7 @@
 import { apiClient } from './client';
 import { Payment } from '@/types/payment';
 
-const BASE_URL = process.env.NEXT_PUBLIC_PAYMENT_SERVICE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_API_GATEWAY_URL;
 
 export const paymentService = {
     getPayment: (id: string) =>

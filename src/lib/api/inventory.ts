@@ -1,7 +1,7 @@
 import { apiClient } from './client';
 import { Inventory } from '@/types/inventory';
 
-const BASE_URL = process.env.NEXT_PUBLIC_INVENTORY_SERVICE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_API_GATEWAY_URL;
 
 export const inventoryService = {
     getInventoryByProductId: (productId: string) =>

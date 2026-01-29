@@ -1,7 +1,7 @@
 import { apiClient } from './client';
 import { Order, CreateOrderCommand } from '@/types/order';
 
-const BASE_URL = process.env.NEXT_PUBLIC_ORDER_SERVICE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_API_GATEWAY_URL;
 
 export const orderService = {
     createOrder: (command: CreateOrderCommand, idempotencyKey?: string) =>
